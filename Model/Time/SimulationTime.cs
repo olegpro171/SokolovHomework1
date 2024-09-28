@@ -32,6 +32,14 @@ namespace Model.Time
             }
         }
 
+        public static void AdvanceStep()
+        {
+            foreach (Action<double> action in Actions)
+            {
+                action(dT);
+            }
+            _CurrentTime += dT;
+        }
 
         public static void AddAction(Action<double> action)
         {

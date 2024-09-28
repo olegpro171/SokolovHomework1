@@ -8,11 +8,22 @@ namespace Model
         public static void Main(string[] args)
         {
             SensorsHost sensorHost = new SensorsHost();
-            
+            sensorHost.isEnabled = true;
+            sensorHost.UseReserve = true;
 
-            Thread TimeThread = new Thread(new ThreadStart(SimulationTime.Start));
+            Thread TimeThread = new Thread(new ThreadStart(Program.TimeThread));
             TimeThread.Start();
 
+        }
+
+
+        public static void TimeThread()
+        {
+            while (SimulationTime.CurrentTime < SimulationTime.Tmax)
+            {
+                SimulationTime.AdvanceStep();
+                //Thread.Sleep((int)SimulationTime.dT);
+            }
         }
     }
 }

@@ -27,6 +27,8 @@ namespace Model.Sensors
 
         public void Update(double DeltaTime)
         {
+            SetState();
+
             switch (State)
             {
                 case HostState.Off:
@@ -45,8 +47,25 @@ namespace Model.Sensors
 
             Console.WriteLine();
             Console.WriteLine($"[SNS HOST] Update T = {SimulationTime.CurrentTime}");
+            Console.WriteLine($"[SNS HOST] State = {State}");
+            Console.WriteLine($"[SNS HOST] isReady = {isReady} | Output = {Output}");
             Console.WriteLine($"[SNS HOST] Sensor 1 = {SensorMain.Output}");
             Console.WriteLine($"[SNS HOST] Sensor 2 = {SensorRes.Output}");
+        }
+
+        private void SetState()
+        {
+            if (!isEnabled)
+            {
+                State = HostState.Off;
+                return;
+            }
+
+            if (UseReserve)
+                State = HostState.OnReserve;
+            else
+                State = HostState.OnMain;
+
         }
 
         private void UpdateForMain()

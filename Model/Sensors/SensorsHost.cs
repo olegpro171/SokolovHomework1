@@ -45,12 +45,12 @@ namespace Model.Sensors
                     break;
             }
 
-            Console.WriteLine();
-            Console.WriteLine($"[SNS HOST] Update T = {SimulationTime.CurrentTime}");
-            Console.WriteLine($"[SNS HOST] State = {State}");
-            Console.WriteLine($"[SNS HOST] isReady = {isReady} | Output = {Output}");
-            Console.WriteLine($"[SNS HOST] Sensor 1 = {SensorMain.Output}");
-            Console.WriteLine($"[SNS HOST] Sensor 2 = {SensorRes.Output}");
+            //Console.WriteLine();
+            Console.WriteLine($"[SNS HOST] Update T = {SimulationTime.CurrentTime.ToString("0.0")} | State = {State}\tisReady = {isReady}\t | Output = {Output.ToString("00.000")} | Sensor 1 = {SensorMain.Output.ToString("00.000")} | Sensor 2 = {SensorRes.Output.ToString("00.000")}");
+            //Console.WriteLine($"[SNS HOST] State = {State}");
+            //Console.WriteLine($"[SNS HOST] isReady = {isReady} | Output = {Output}");
+            //Console.WriteLine($"[SNS HOST] Sensor 1 = {SensorMain.Output.ToString("0.000")}");
+            //Console.WriteLine($"[SNS HOST] Sensor 2 = {SensorRes.Output}");
         }
 
         private void SetState()

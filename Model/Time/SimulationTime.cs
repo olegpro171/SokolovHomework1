@@ -1,11 +1,12 @@
+using Model.Variant;
 using System.Xml;
 
 namespace Model.Time
 {
     public static class SimulationTime
     {
-        public const double dT = 0.1d;
-        public const double Tmax = 10.0d;
+        public const double dT = VariantData.dT;
+        public const double Tmax = VariantData.T_max;
         private static double _CurrentTime;
 
         public static double CurrentTime { get { return _CurrentTime; } }

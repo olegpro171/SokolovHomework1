@@ -1,8 +1,9 @@
-﻿using Model.Time;
+﻿using Model.Common;
+using Model.Time;
 
 namespace Model.Sensors
 {
-    internal class SensorsHost
+    internal class SensorHost
     {
         public bool isEnabled = false;
         public bool UseReserve = false;
@@ -12,16 +13,17 @@ namespace Model.Sensors
         private enum HostState { Off, OnMain, OnReserve, }
         private HostState State = HostState.Off;
 
-        private Sensor SensorMain = new();
-        private Sensor SensorRes = new();
+        private Sensor SensorMain;
+        private Sensor SensorRes;
 
-        public SensorsHost()
+        public SensorHost()
         {
+            SensorMain = new Sensor();
+            SensorRes = new Sensor();
+
             SensorMain.isEnabled = true;
             SensorRes.isEnabled = false;
 
-            SimulationTime.AddAction(SensorMain.Update);
-            SimulationTime.AddAction(SensorRes.Update);
             SimulationTime.AddAction(Update);
         }
 
@@ -44,13 +46,14 @@ namespace Model.Sensors
                     UpdateForReserve();
                     break;
             }
+            const string spaces = "      ";
+            string logMsg = 
+                $"T = {SimulationTime.CurrentTime.ToString("00.0")} | State = {State}\tisReady = {isReady}\t| " +
+                $"Output = {(Output == 0.0d ? spaces : Output.ToString("00.000"))} | " +
+                $"Sensor 1 = {(SensorMain.Output == 0.0d ? spaces : SensorMain.Output.ToString("00.000"))} | " +
+                $"Sensor 2 = {(SensorRes.Output == 0.0d ? spaces : SensorRes.Output.ToString("00.000"))}";
 
-            //Console.WriteLine();
-            Console.WriteLine($"[SNS HOST] Update T = {SimulationTime.CurrentTime.ToString("0.0")} | State = {State}\tisReady = {isReady}\t | Output = {Output.ToString("00.000")} | Sensor 1 = {SensorMain.Output.ToString("00.000")} | Sensor 2 = {SensorRes.Output.ToString("00.000")}");
-            //Console.WriteLine($"[SNS HOST] State = {State}");
-            //Console.WriteLine($"[SNS HOST] isReady = {isReady} | Output = {Output}");
-            //Console.WriteLine($"[SNS HOST] Sensor 1 = {SensorMain.Output.ToString("0.000")}");
-            //Console.WriteLine($"[SNS HOST] Sensor 2 = {SensorRes.Output}");
+            Logger.Log(logMsg);
         }
 
         private void SetState()
@@ -65,7 +68,6 @@ namespace Model.Sensors
                 State = HostState.OnReserve;
             else
                 State = HostState.OnMain;
-
         }
 
         private void UpdateForMain()

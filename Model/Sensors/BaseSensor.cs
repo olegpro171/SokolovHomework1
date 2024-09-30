@@ -7,7 +7,7 @@ namespace Model.Sensors
     public class Sensor
     {
         public bool isEnabled = false;
-        public double _output = 0.0d;
+        private double _output = 0.0d;
         public double Output { get { return _output; } }
 
         private const double eps = 0.001;
@@ -17,9 +17,11 @@ namespace Model.Sensors
 
         private const double t_rdy = VariantData.t_rdy;
         private double ReadyTimer = t_rdy;
+        private bool isFailed = false;
 
         public Sensor()
         {
+            SimulationTime.AddAction(this.Update);
         }
 
         private static double Xs(double t)
@@ -38,6 +40,9 @@ namespace Model.Sensors
 
         public void Update(double DeltaTime)
         {
+            if (isFailed)
+                return;
+
             switch (isEnabled)
             {
                 case false:
@@ -53,6 +58,11 @@ namespace Model.Sensors
             _output = GetSensorOutputValue();
         }
 
+        public void ImitateFailure()
+        {
+            isFailed = true;
+        }
+
         private void TurnOnProcedure(double DeltaTime)
         {
             if (!isEnabled)
@@ -62,19 +72,17 @@ namespace Model.Sensors
             {
                 case SensoreState.Off:
                     state = SensoreState.Warmup;
-                    //Console.WriteLine("[SENSOR] Warmup Started");
+                    ReadyTimer -= DeltaTime;
                     break;
 
                 case SensoreState.Warmup:
                     if (ReadyTimer > eps)
                     {
                         ReadyTimer -= DeltaTime;
-                        //Console.WriteLine($"[SENSOR] Warmup T = {Math.Round(ReadyTimer, 3)}");
                     }
                     else
                     {
                         state = SensoreState.On;
-                        //Console.WriteLine($"[SENSOR] Warmup complete");
                     }
                     break;
 

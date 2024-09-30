@@ -16,7 +16,8 @@ namespace Model.Variant
             G = 125.6;
 
         public const double
+            t_poll = 0.1d,
             T_max = 15,
-            dT = 0.1;
+            dT = 0.02d;
     }
 }

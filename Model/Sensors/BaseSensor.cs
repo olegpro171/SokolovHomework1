@@ -47,6 +47,7 @@ namespace Model.Sensors
             {
                 case false:
                     ReadyTimer = t_rdy;
+                    ReadyTimer -= DeltaTime;
                     state = SensoreState.Off;
                     break;
 

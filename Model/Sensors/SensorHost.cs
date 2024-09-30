@@ -1,5 +1,6 @@
 ﻿using Model.Common;
 using Model.Time;
+using Model.Variant;
 
 namespace Model.Sensors
 {
@@ -15,6 +16,11 @@ namespace Model.Sensors
 
         private Sensor SensorMain;
         private Sensor SensorRes;
+
+        private const double PollTime = VariantData.t_poll;
+        private double PollingTimer = 0.0d;
+
+        private const double eps = 0.001;
 
         public SensorHost()
         {
@@ -39,16 +45,16 @@ namespace Model.Sensors
                     break;
 
                 case HostState.OnMain:
-                    UpdateForMain();
+                    UpdateForMain(DeltaTime);
                     break;
 
                 case HostState.OnReserve:
-                    UpdateForReserve();
+                    UpdateForReserve(DeltaTime);
                     break;
             }
             const string spaces = "      ";
             string logMsg = 
-                $"T = {SimulationTime.CurrentTime.ToString("00.0")} | State = {State}\tisReady = {isReady}\t| " +
+                $"T = {SimulationTime.CurrentTime.ToString("00.00")} | State = {State} \tisReady = {isReady}\t| " +
                 $"Output = {(Output == 0.0d ? spaces : Output.ToString("00.000"))} | " +
                 $"Sensor 1 = {(SensorMain.Output == 0.0d ? spaces : SensorMain.Output.ToString("00.000"))} | " +
                 $"Sensor 2 = {(SensorRes.Output == 0.0d ? spaces : SensorRes.Output.ToString("00.000"))}";
@@ -70,16 +76,20 @@ namespace Model.Sensors
                 State = HostState.OnMain;
         }
 
-        private void UpdateForMain()
+        private void UpdateForMain(double dT)
         {
             TurnOffSensor(ref SensorRes);
             TurnOnSensor(ref SensorMain);
+
+            PollSensor(SensorMain, dT);
         }
 
-        private void UpdateForReserve()
+        private void UpdateForReserve(double dT)
         {
             TurnOffSensor(ref SensorMain);
             TurnOnSensor(ref SensorRes);
+
+            PollSensor(SensorRes, dT);
         }
 
         private void TurnOffSensor(ref Sensor sensor)
@@ -104,12 +114,42 @@ namespace Model.Sensors
                     break;
 
                 case Sensor.SensoreState.On:
-                    isReady = true;
-                    Output = sensor.Output;
+                    if (isReady != true)
+                        isReady = true;
                     break;
 
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        private void PollSensor(Sensor sensor, double dT)
+        {
+            if (!isReady)
+            {
+                PollingTimer = 0.0d;
+                return;
+            }
+
+            if (PollingTimer >= eps)
+            {
+                PollingTimer -= dT;
+                return;
+            }
+            else
+            {
+                PollingTimer = PollTime;
+                PollingTimer -= dT;
+            }
+
+
+            if (sensor.isEnabled && sensor.state == Sensor.SensoreState.On)
+            {
+                Output = sensor.Output;
+            }
+            else
+            {
+                Output = 0.0d;
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Model.Sensors;
+﻿using Model.Common;
+using Model.Sensors;
 using Model.Time;
 using Model.Variant;
 
@@ -13,6 +14,7 @@ namespace Model
             Thread TimeThread = new Thread(new ThreadStart(Program.TimeThread));
             TimeThread.Start();
 
+            while (TimeThread.ThreadState == ThreadState.Running);
         }
 
 
@@ -26,6 +28,7 @@ namespace Model
                 bool failFlag = false;
                 if (!failFlag && Math.Abs(SimulationTime.CurrentTime - VariantData.t_fail) < 0.001)
                 {
+                    //Logger.Log("switch to reserve");
                     failFlag = true;
                     sensorHost.UseReserve = true;
                 }

@@ -59,7 +59,7 @@ namespace Model.Sensors
 
         private void WriteLogs()
         {
-            string StringHostState(HostState hostState)
+            string HostStateMessage(HostState hostState)
             {
                 switch (hostState)
                 {
@@ -85,12 +85,12 @@ namespace Model.Sensors
                     return "Not Ready";
                 }
             }
-            const string spaces = "      ";
+            const string Blank = "      ";
             string logMsg =
-                $"T = {SimulationTime.CurrentTime.ToString("00.00")} | {StringHostState(State)} | {ReadyModeMessage(isReady)} | " +
-                $"Output = {(Output == 0.0d ? spaces : Output.ToString("00.000"))} | " +
-                $"Sensor 1 = {(SensorMain.Output == 0.0d ? spaces : SensorMain.Output.ToString("00.000"))} | " +
-                $"Sensor 2 = {(SensorRes.Output == 0.0d ? spaces : SensorRes.Output.ToString("00.000"))}";
+                $"T = {SimulationTime.CurrentTime.ToString("00.00")} | {HostStateMessage(State)} | {ReadyModeMessage(isReady)} | " +
+                $"Output = {(Output == 0.0d ? Blank : Output.ToString("00.000"))} | " +
+                $"Sensor 1 = {(SensorMain.Output == 0.0d ? Blank : SensorMain.Output.ToString("00.000"))} | " +
+                $"Sensor 2 = {(SensorRes.Output == 0.0d ? Blank : SensorRes.Output.ToString("00.000"))}";
 
             Logger.Log(logMsg);
         }

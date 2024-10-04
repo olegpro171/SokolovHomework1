@@ -13,6 +13,7 @@ namespace Model.Sensors
 
         private enum HostState { Off, OnMain, OnReserve, }
         private HostState State = HostState.Off;
+        
 
         private Sensor SensorMain;
         private Sensor SensorRes;
@@ -52,9 +53,41 @@ namespace Model.Sensors
                     UpdateForReserve(DeltaTime);
                     break;
             }
+
+            WriteLogs();
+        }
+
+        private void WriteLogs()
+        {
+            string StringHostState(HostState hostState)
+            {
+                switch (hostState)
+                {
+                    case HostState.Off:
+                        return "Off            ";
+                    case HostState.OnMain:
+                        return "Main Channel   ";
+                    case HostState.OnReserve:
+                        return "Reserve Channel";
+                    default:
+                        throw new ArgumentException();
+                }
+            }
+
+            string ReadyModeMessage(bool isReady)
+            {
+                if (isReady)
+                {
+                    return "Ready    ";
+                }
+                else
+                {
+                    return "Not Ready";
+                }
+            }
             const string spaces = "      ";
-            string logMsg = 
-                $"T = {SimulationTime.CurrentTime.ToString("00.00")} | State = {State} \tisReady = {isReady}\t| " +
+            string logMsg =
+                $"T = {SimulationTime.CurrentTime.ToString("00.00")} | {StringHostState(State)} | {ReadyModeMessage(isReady)} | " +
                 $"Output = {(Output == 0.0d ? spaces : Output.ToString("00.000"))} | " +
                 $"Sensor 1 = {(SensorMain.Output == 0.0d ? spaces : SensorMain.Output.ToString("00.000"))} | " +
                 $"Sensor 2 = {(SensorRes.Output == 0.0d ? spaces : SensorRes.Output.ToString("00.000"))}";

@@ -11,6 +11,7 @@ namespace Model
 
         public static void Main(string[] args)
         {
+
             Thread TimeThread = new Thread(new ThreadStart(Program.TimeThread));
             TimeThread.Start();
 

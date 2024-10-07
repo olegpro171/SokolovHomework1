@@ -1,4 +1,5 @@
-﻿using Model.Sensors;
+﻿using Model.Manchester;
+using Model.Sensors;
 using Model.Time;
 using Model.Variant;
 using System;
@@ -38,6 +39,14 @@ namespace Model.AU
                 isFailed = true;
                 SensorHost.UseReserve = true;
             }
+        }
+
+
+        public ResponceWord HandleMKIO(Word commandWord)
+        {
+            ResponceWord rw = new();
+            rw.Data = commandWord.Data;
+            return rw;
         }
     }
 }

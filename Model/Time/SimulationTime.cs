@@ -5,6 +5,8 @@ namespace Model.Time
 {
     public static class SimulationTime
     {
+        private const double timeCompEps = 0.001;
+
         public const double dT = VariantData.dT;
         public const double Tmax = VariantData.T_max;
         private static double _CurrentTime;
@@ -45,6 +47,11 @@ namespace Model.Time
         public static void AddAction(Action<double> action)
         {
             Actions.Add(action);
+        }
+
+        public static bool CompareTimeTo(double Time)
+        {
+            return Math.Abs(CurrentTime - Time) < timeCompEps;
         }
     }
 }

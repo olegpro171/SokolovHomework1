@@ -1,6 +1,4 @@
-﻿using Model.AU;
-using Model.Common;
-using Model.Sensors;
+﻿using Model.Common;
 using Model.Time;
 using Model.Variant;
 using System;
@@ -8,22 +6,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Model.Manchester;
+using Model.Units;
 
 namespace Model.Global
 {
     internal class System
     {
-        private SensorHost SensorHost;
+        private SensorUnit SensorHost;
         private AutomationUnit AutomationUnit;
-
+        private Interface MKIO;
+        private MainComputingUnit MainComputingUnit;
 
         public System()
         {
-            SensorHost = new SensorHost();
+            SensorHost = new SensorUnit();
             SensorHost.isEnabled = true;
             SensorHost.UseReserve = false;
 
             AutomationUnit = new AutomationUnit(SensorHost);
+
+            MKIO = new Interface();
+            MKIO.AddNew(SensorHost.HandleMKIOWord);
+            MKIO.AddNew(AutomationUnit.HandleMKIOWord);
+
+            MainComputingUnit = new MainComputingUnit(MKIO);
         }
 
         public void AdvanceStep()
@@ -35,7 +42,7 @@ namespace Model.Global
                 {
                     Logger.Log("switch to reserve");
                     failFlag = true;
-                    SensorHost.UseReserve = true;
+                    
                 }
 
                 SimulationTime.AdvanceStep();

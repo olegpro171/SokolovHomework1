@@ -6,8 +6,18 @@ using System.Threading.Tasks;
 
 namespace Model.Manchester
 {
-    internal abstract class BaseWord
+    internal class BaseWord
     {
-        public string Data;
+        public int Data;
+
+        protected static BaseWord GetWordWithData(int Data)
+        {
+            var rw = new BaseWord();
+            rw.Data = Data;
+            return rw;
+        }
+
+        public BaseWord(int Data) { this.Data = Data; }
+        public BaseWord() { }
     }
 }

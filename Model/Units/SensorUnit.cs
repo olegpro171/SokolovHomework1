@@ -1,10 +1,12 @@
 ﻿using Model.Common;
+using Model.Manchester;
+using Model.Sensors;
 using Model.Time;
 using Model.Variant;
 
-namespace Model.Sensors
+namespace Model.Units
 {
-    internal class SensorHost
+    internal class SensorUnit : BaseUnit
     {
         public bool isEnabled = false;
         public bool UseReserve = false;
@@ -13,7 +15,7 @@ namespace Model.Sensors
 
         private enum HostState { Off, OnMain, OnReserve, }
         private HostState State = HostState.Off;
-        
+
 
         private Sensor SensorMain;
         private Sensor SensorRes;
@@ -23,7 +25,7 @@ namespace Model.Sensors
 
         private const double eps = 0.001;
 
-        public SensorHost()
+        public SensorUnit()
         {
             SensorMain = new Sensor();
             SensorRes = new Sensor();
@@ -32,6 +34,11 @@ namespace Model.Sensors
             SensorRes.isEnabled = false;
 
             SimulationTime.AddAction(Update);
+        }
+
+        public override ResponceWord HandleMKIOWord(CommandWord word)
+        {
+            return new SUResponceWord(SimulationTime.CurrentTime, isReady ? Output : 0);
         }
 
         public void Update(double DeltaTime)

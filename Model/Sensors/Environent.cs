@@ -6,7 +6,7 @@ namespace Model.Sensors
     {
         public static double X(double t)
         {
-            return VariantData.A + VariantData.B * t + VariantData.D + Math.Sin(VariantData.C * t);
+            return VariantData.A + VariantData.B * t + VariantData.D * Math.Sin(VariantData.C * t);
         }
 
         public static double F(double t) 

@@ -10,12 +10,13 @@ namespace Model.Common
 {
     internal static class Logger
     {
-        private const string FilenameExtension = "txt";
+        private const string FilenameExtension = "csv";
         private const string FilenameDirectory = "logs/";
 
         private static readonly string SessionLogFilename;
         
-        private static StringBuilder AllLogsSB;
+        private static StringBuilder AllLogsSB = new();
+        private static StringBuilder CSVLogsSB = new();
 
         //private static 
 
@@ -24,8 +25,9 @@ namespace Model.Common
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
             static void OnProcessExit(object? sender, EventArgs e) => WriteFileBuffer();
 
-            AllLogsSB = new();
-            SessionLogFilename = GetSessionFilename();
+            SessionLogFilename = "SessionLogFile.csv";
+            File.Delete(SessionLogFilename);
+            // SessionLogFilename = GetSessionFilename();
         }
 
         private static string GetSessionFilename()
@@ -34,12 +36,15 @@ namespace Model.Common
         }
 
 
-        public static void Log(string message)
+        public static void Log(string message, bool noPrefix = false)
         {
             var methodInfo = new StackTrace().GetFrame(1)?.GetMethod();
             var callerClassName = methodInfo?.ReflectedType?.Name;
 
-            SendLogMsg($"[{callerClassName}]: {message}");
+            if (noPrefix)
+                SendLogMsg(message);
+            else    
+                SendLogMsg($"[{callerClassName}]: {message}");
         }
 
         public static void WriteFileBuffer()
@@ -52,10 +57,11 @@ namespace Model.Common
             AllLogsSB.Clear();
         }
 
-        private static void SendLogMsg(string LogMsg)
+        private static void SendLogMsg(string LogMsg, bool writeOnConsole = false)
         {
             AllLogsSB.AppendLine(LogMsg);
-            Console.WriteLine(LogMsg);
+            if (writeOnConsole)
+                Console.WriteLine(LogMsg);
         }
     }
 }

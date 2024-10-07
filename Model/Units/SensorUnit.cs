@@ -66,6 +66,25 @@ namespace Model.Units
 
         private void WriteLogs()
         {
+            
+
+            Logger.Log(GetCSVLogMsg(), noPrefix: true);
+        }
+
+        private static double Xs(double t)
+        {
+            return Environent.X(t) + Environent.F(t);
+        }
+        private string GetCSVLogMsg()
+        {
+            string logMsg =
+                $"{SimulationTime.CurrentTime}; {Output}; {SensorMain.Output}; {SensorRes.Output}; {Xs(SimulationTime.CurrentTime)}";
+
+            return logMsg;
+        }
+
+        private string GetDefaultLogMsg()
+        {
             string HostStateMessage(HostState hostState)
             {
                 switch (hostState)
@@ -99,7 +118,7 @@ namespace Model.Units
                 $"Sensor 1 = {(SensorMain.Output == 0.0d ? Blank : SensorMain.Output.ToString("00.000"))} | " +
                 $"Sensor 2 = {(SensorRes.Output == 0.0d ? Blank : SensorRes.Output.ToString("00.000"))}";
 
-            Logger.Log(logMsg);
+            return logMsg;
         }
 
         private void SetState()

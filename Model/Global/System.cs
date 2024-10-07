@@ -40,7 +40,7 @@ namespace Model.Global
                 bool failFlag = false;
                 if (!failFlag && Math.Abs(SimulationTime.CurrentTime - VariantData.t_fail) < 0.001)
                 {
-                    Logger.Log("switch to reserve");
+                    //Logger.Log("switch to reserve");
                     failFlag = true;
                     
                 }

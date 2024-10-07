@@ -14,8 +14,9 @@ namespace Model
         {
             Thread TimeThread = new Thread(new ThreadStart(Program.TimeThread));
             TimeThread.Start();
+
+            TimeThread.Join();
             
-            while (TimeThread.ThreadState == ThreadState.Running);
         }
 
 
